@@ -83,9 +83,7 @@ IRC::~IRC()
 	{
 		if (RecvThread != 0)
 		{
-			char *str = strFormatString("Quit :%s is going down", nick);
-			Send(str);
-			free(str);
+			vaSend("Quit :%s is going down", nick);
 			pthread_cancel(RecvThread);
 			pthread_join(RecvThread, NULL);
 		}
@@ -113,18 +111,13 @@ void IRC::verifyConfig()
 
 void IRC::Connect()
 {
-	char *str;
 	JSONObject &config = configRoot->asObjectRef();
 
-	str = strFormatString("NICK %s", nick);
-	Send(str);
-	free(str);
+	vaSend("NICK %s", nick);
 	if (config["user"] != NULL && config["user"]->getType() == JSON_TYPE_STRING)
-		str = strFormatString("USER %s . . :%s IRC Bot", config["user"]->asString(), nick);
+		vaSend("USER %s . . :%s IRC Bot", config["user"]->asString(), nick);
 	else
-		str = strFormatString("USER %s . . :%s IRC Bot", config["nick"]->asString(), nick);
-	Send(str);
-	free(str);
+		vaSend("USER %s . . :%s IRC Bot", config["nick"]->asString(), nick);
 }
 
 void IRC::JoinChannels()
