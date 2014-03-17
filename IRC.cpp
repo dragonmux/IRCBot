@@ -238,7 +238,7 @@ void IRC::Send(const char *message)
 	free(realMessage);
 }
 
-const char *IRC::GetNick()
+const char *IRC::GetNick() const
 {
 	return nick;
 }

@@ -110,7 +110,7 @@ public:
 	void vaSend(const char *message, ...);
 	void privMsgSend(const char *who, const char *message, ...);
 	char *Recv(int *nBytes);
-	const char *GetNick();
+	const char *GetNick() const;
 };
 
 #endif /*__IRC_H__*/
