@@ -75,7 +75,6 @@ IRC::IRC() : con(-1), RecvThread(0), configRoot(parseJSONFile("server.json"))
 	pthread_attr_destroy(&RecvAttrs);
 
 	nick = config["nick"]->asString();
-	channel = config["channel"]->asString();
 }
 
 IRC::~IRC()
@@ -126,6 +125,20 @@ void IRC::Connect()
 		str = strFormatString("USER %s . . :%s IRC Bot", config["nick"]->asString(), nick);
 	Send(str);
 	free(str);
+}
+
+void IRC::JoinChannels()
+{
+	JSONObject &config = configRoot->asObjectRef();
+
+	if (config.exists("channel"))
+		vaSend("JOIN %s", config["channel"]->asString());
+	else
+	{
+		JSONArray &channels = config["channels"]->asArrayRef();
+		for (size_t i = 0; i < channels.size(); i++)
+			vaSend("JOIN %s", channels[i]->asString());
+	}
 }
 
 void *IRC::ThreadedRecv(void *p_This)
@@ -235,11 +248,6 @@ void IRC::Send(const char *message)
 const char *IRC::GetNick()
 {
 	return nick;
-}
-
-const char *IRC::GetChannel()
-{
-	return channel;
 }
 
 IRCMessage::IRCMessage(const char *line, uint32_t LineLength) : Line(line), count(0), lineLength(LineLength),
@@ -498,11 +506,7 @@ void IRCMessage::sendResponse(IRC *Connection)
 		Connection->vaSend("PONG :%s", Parameters[0]);
 	}
 	else if (Command == RPL_MOTDEND)
-	{
-		char *str = strFormatString("JOIN %s", Connection->GetChannel());
-		Connection->Send(str);
-		free(str);
-	}
+		Connection->JoinChannels();
 }
 
 void IRCMessage::queueCommandProcessing(IRC *Connection)

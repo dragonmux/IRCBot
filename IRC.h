@@ -95,7 +95,7 @@ private:
 	int32_t con;
 	pthread_t RecvThread;
 	rSON::JSONAtom *configRoot;
-	const char *nick, *channel;
+	const char *nick;
 
 	static void *ThreadedRecv(void *p_This);
 	char *safeRealloc(char *m, int s);
@@ -105,12 +105,12 @@ public:
 	IRC();
 	~IRC();
 	void Connect();
+	void JoinChannels();
 	void Send(const char *message);
 	void vaSend(const char *message, ...);
 	void privMsgSend(const char *who, const char *message, ...);
 	char *Recv(int *nBytes);
 	const char *GetNick();
-	const char *GetChannel();
 };
 
 #endif /*__IRC_H__*/
