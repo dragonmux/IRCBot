@@ -102,11 +102,23 @@ void IRC::verifyConfig()
 	if (configRoot == NULL || configRoot->getType() != JSON_TYPE_OBJECT)
 		throw new IRCError("Invalid config");
 	JSONObject &config = configRoot->asObjectRef();
-	if (config["server"] == NULL || config["port"] == NULL ||
-		config["channel"] == NULL || config["nick"] == NULL ||
+	if (!config.exists("server") || !config.exists("port") || !config.exists("nick") ||
 		config["server"]->getType() != JSON_TYPE_STRING || config["port"]->getType() != JSON_TYPE_INT ||
-		config["channel"]->getType() != JSON_TYPE_STRING || config["nick"]->getType() != JSON_TYPE_STRING)
+		config["nick"]->getType() != JSON_TYPE_STRING)
 		throw new IRCError("Configuration contains errors");
+	if ((!config.exists("channel") && !config.exists("channels")) ||
+		(config.exists("channel") && config["channel"]->getType() != JSON_TYPE_STRING) ||
+		(config.exists("channels") && config["channels"]->getType() != JSON_TYPE_ARRAY))
+		throw new IRCError("Configuration contains errors");
+	if (config.exists("channels"))
+	{
+		JSONArray &channels = config["channels"]->asArrayRef();
+		for (size_t i = 0; i < channels.size(); i++)
+		{
+			if (channels[i] == NULL || channels[i]->getType() != JSON_TYPE_STRING)
+				throw new IRCError("Configuration contains errors");
+		}
+	}
 }
 
 void IRC::Connect()
