@@ -45,7 +45,7 @@ IRC::IRC() : con(-1), RecvThread(0), configRoot(parseJSONFile("server.json"))
 	service.sin_port = htons(config["port"]->asInt());
 	ircHost = gethostbyname(config["server"]->asString());
 	if (ircHost == NULL)
-		throw new IRCError("Could not look up server irc.sportschat.eu!");
+		throw new IRCError("Could not look up server!");
 	service.sin_addr.s_addr = ((struct in_addr *)(ircHost->h_addr_list[0]))->s_addr;
 
 	con = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
