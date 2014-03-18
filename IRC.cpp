@@ -126,7 +126,7 @@ void IRC::Connect()
 	JSONObject &config = configRoot->asObjectRef();
 
 	vaSend("NICK %s", nick);
-	if (config["user"] != NULL && config["user"]->getType() == JSON_TYPE_STRING)
+	if (config.exists("user") && config["user"]->getType() == JSON_TYPE_STRING)
 		vaSend("USER %s . . :%s IRC Bot", config["user"]->asString(), nick);
 	else
 		vaSend("USER %s . . :%s IRC Bot", config["nick"]->asString(), nick);
