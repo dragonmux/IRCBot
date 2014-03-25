@@ -27,7 +27,7 @@ An example configuration file is as follows
 
 ## The License
 
-As stated in the code, I have licensed the library using GPL v3+.
+As stated in the code, I have licensed the program using GPL v3+.
 Please report bugs to dx-mon@users.sourceforge.net
 
 ## Known Bugs
