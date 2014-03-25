@@ -541,7 +541,7 @@ void IRCMessage::queueCommandProcessing(IRC *Connection)
 	if (Command == CMD_PING || Command == RPL_MOTDEND)
 		sendResponse(Connection);
 	if (Command == IRC_UNKNOWN)
-			con->printf(Line);
+		con->printf(Line);
 	else if (Command != CMD_PING)
 		commandQueue.push(new Request(Command, Parameters, Prefix));
 }
