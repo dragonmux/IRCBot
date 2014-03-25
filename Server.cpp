@@ -22,13 +22,14 @@
 #include <time.h>
 #include <signal.h>
 
-std::queue<Request *> commandQueue;
+ThreadedQueue<Request *> commandQueue;
 Console *con;
 bool shutdown = false;
 
 void QuitFn(int)
 {
 	shutdown = true;
+	commandQueue.signalItems();
 }
 
 int main(int argc, char **argv)
@@ -70,7 +71,9 @@ int main(int argc, char **argv)
 
 			while (shutdown == false)
 			{
-				timespec ts = {0, STD_NS_SLEEP};
+				commandQueue.waitItems();
+				if (shutdown == true)
+					break;
 				while (commandQueue.size() != 0)
 				{
 					Request *cmd = commandQueue.front();
@@ -78,8 +81,8 @@ int main(int argc, char **argv)
 					cmd->process(IRCCon);
 					delete cmd;
 				}
-				nanosleep(&ts, NULL);
 			}
+
 			while (commandQueue.size() != 0)
 			{
 				Request *cmd = commandQueue.front();

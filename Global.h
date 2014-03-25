@@ -25,12 +25,12 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <ctype.h>
-#include <queue>
+#include "ThreadedQueue.h"
 #include "Console.h"
 #include "Request.h"
 #include "String.h"
 
-extern std::queue<Request *> commandQueue;
+extern ThreadedQueue<Request *> commandQueue;
 extern Console *con;
 
 #define STD_NS_SLEEP 10000
