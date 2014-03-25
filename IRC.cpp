@@ -119,6 +119,20 @@ void IRC::verifyConfig()
 				throw new IRCError("Configuration contains errors");
 		}
 	}
+	if (config.exists("identify"))
+	{
+		if (config["identify"]->getType() != JSON_TYPE_OBJECT)
+			throw new IRCError("Configuration contains errors");
+		else
+		{
+			JSONObject &ident = config["identify"]->asObjectRef();
+			if (!ident.exists("nick") || !ident.exists("password") || !ident.exists("service") ||
+				ident["nick"]->getType() != JSON_TYPE_STRING ||
+				ident["password"]->getType() != JSON_TYPE_STRING ||
+				ident["service"]->getType() != JSON_TYPE_STRING)
+				throw new IRCError("Configuration contains errors");
+		}
+	}
 }
 
 void IRC::Connect()
@@ -135,6 +149,13 @@ void IRC::Connect()
 void IRC::JoinChannels()
 {
 	JSONObject &config = configRoot->asObjectRef();
+
+	if (config.exists("identify"))
+	{
+		JSONObject &ident = config["identify"]->asObjectRef();
+		vaSend("PRIVMESG %s: identify %s %s", ident["service"]->asString(), ident["nick"]->asString(),
+			ident["password"]->asString());
+	}
 
 	if (config.exists("channel"))
 		vaSend("JOIN %s", config["channel"]->asString());
