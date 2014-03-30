@@ -1,0 +1,3 @@
+[submodule "rSON"]
+	path = rSON
+	url = https://github.com/DX-MON/rSON.git
