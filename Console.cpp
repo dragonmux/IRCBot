@@ -20,6 +20,8 @@
 #include "Console.h"
 #include <stdarg.h>
 
+static pthread_mutex_t consoleMutex = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
+
 void Console::printf(const char *format, ...)
 {
 	char *output;
@@ -145,5 +147,7 @@ void Console::Print(std::string Output)
 	if (Colour == true)
 		Output.append("\x1B[0;39m"), Colour = false;
 
+	pthread_mutex_lock(&consoleMutex);
 	::printf(Output.c_str());
+	pthread_mutex_unlock(&consoleMutex);
 }
