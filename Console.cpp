@@ -50,6 +50,7 @@ void Console::printf(const char *format, ...)
 #define MAGENTA "35"
 #define CYAN "36"
 #define WHITE "37"
+#define NORMAL COLOUR("0;39")
 
 const char *Console::ColourToString(char IRCColour)
 {
@@ -124,7 +125,8 @@ void Console::Print(std::string Output)
 					Output.replace(pos, 1, "\x1B[22m"), Bold = false;
 				break;
 			case 0x03:
-				Output.replace(pos, 2, ColourToString(Output[pos + 1])), Colour = true;
+				Output.replace(pos, 2, ColourToString(Output[pos + 1]));
+				Colour = true;
 				break;
 			case 0x0F:
 				Output.replace(pos, 1, "\x1B[0m");
@@ -144,8 +146,8 @@ void Console::Print(std::string Output)
 		}
 	}
 
-	if (Colour == true)
-		Output.append("\x1B[0;39m"), Colour = false;
+	if (Colour || Bold || Underline || Reverse)
+		Output.append(NORMAL);
 
 	pthread_mutex_lock(&consoleMutex);
 	::printf(Output.c_str());
