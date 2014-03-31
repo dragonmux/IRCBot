@@ -120,7 +120,10 @@ void Request::process(IRC *Connection)
 		case RPL_MOTDSTART:
 		case RPL_MOTD:
 		case RPL_MOTDEND:
-			con->printf("%i: %s\n", Parameters.size(), Parameters[Parameters.size() - 1]);
+		case RPL_WELCOME:
+		case RPL_YOURHOST:
+		case RPL_CREATED:
+			con->printf("%s\n", Parameters[1]);
 			break;
 		case CMD_NOTICE:
 			con->printf("%s => %s\n", Parameters[0], Parameters[1]);
@@ -142,6 +145,15 @@ void Request::process(IRC *Connection)
 			con->printf("People on channel %s: %s\n", Parameters[Parameters.size() - 2], Parameters[Parameters.size() - 1]);
 			parseNames();
 			break;
+		case RPL_INFO:
+		case RPL_BOUNCE:
+		{
+			std::string msg;
+			for (i = 1; i < Parameters.size(); i++)
+				msg.append(Parameters[i]).append(" ");
+			con->printf("%s\n", msg.c_str());
+			break;
+		}
 		default:
 			for (i = 0; i < Parameters.size(); i++)
 				con->printf("%s ", Parameters[i]);
