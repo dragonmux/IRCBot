@@ -447,6 +447,7 @@ void IRCMessage::setStringCommand()
 	else CMDCASE("MODE", CMD_MODE);
 	else CMDCASE("TOPIC", CMD_TOPIC);
 	else CMDCASE("NAMES", CMD_NAMES);
+	else CMDCASE("QUIT", CMD_USERQUIT);
 	else
 		Command = IRC_UNKNOWN;
 }
