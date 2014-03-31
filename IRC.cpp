@@ -154,8 +154,7 @@ void IRC::JoinChannels()
 	{
 		JSONObject &ident = config["identity"]->asObjectRef();
 		::con->printf("Identifying with %s as %s\n", ident["service"]->asString(), ident["nick"]->asString());
-		vaSend("PRIVMESG %s: identify %s %s", ident["service"]->asString(), ident["nick"]->asString(),
-			ident["password"]->asString());
+		privMsgSend(ident["service"]->asString(), "identify %s %s", ident["nick"]->asString(), ident["password"]->asString());
 	}
 
 	if (config.exists("channel"))
