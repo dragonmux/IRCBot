@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 			delete con;
 			return 1;
 		}
-		sleep(1);
+
 		try
 		{
 			IRCCon->Connect();
@@ -85,9 +85,8 @@ int main(int argc, char **argv)
 
 			while (commandQueue.size() != 0)
 			{
-				Request *cmd = commandQueue.front();
+				delete commandQueue.front();
 				commandQueue.pop();
-				delete cmd;
 			}
 		}
 		catch (IRCError *e)

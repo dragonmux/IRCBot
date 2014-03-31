@@ -20,11 +20,12 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "Global.h"
 #include "String.h"
 
 #define die(...) \
 { \
-	printf(__VA_ARGS__); \
+	con->printf(__VA_ARGS__); \
 	exit(1); \
 }
 
