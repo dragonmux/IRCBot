@@ -88,6 +88,7 @@ int main(int argc, char **argv)
 				delete commandQueue.front();
 				commandQueue.pop();
 			}
+			IRCCon->Quit();
 		}
 		catch (IRCError *e)
 		{

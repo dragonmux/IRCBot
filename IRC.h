@@ -102,6 +102,7 @@ private:
 	pthread_t RecvThread;
 	rSON::JSONAtom *configRoot;
 	const char *nick;
+	char *server;
 
 	static void *ThreadedRecv(void *p_This);
 	char *safeRealloc(char *m, int s);
@@ -116,6 +117,8 @@ public:
 	void vaSend(const char *message, ...);
 	void privMsgSend(const char *who, const char *message, ...);
 	char *Recv(int *nBytes);
+	void Quit();
+	void SetServer(const char *server);
 	const char *GetNick() const;
 };
 

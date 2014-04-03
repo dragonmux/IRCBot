@@ -31,7 +31,7 @@ using namespace rSON;
 pthread_mutex_t IRCMutex;
 sockaddr_in service;
 
-IRC::IRC() : con(-1), RecvThread(0), configRoot(parseJSONFile("server.json"))
+IRC::IRC() : con(-1), RecvThread(0), configRoot(parseJSONFile("server.json")), server(NULL)
 {
 	pthread_attr_t RecvAttrs;
 	pthread_mutexattr_t IRCAttrs;
@@ -79,11 +79,12 @@ IRC::IRC() : con(-1), RecvThread(0), configRoot(parseJSONFile("server.json"))
 
 IRC::~IRC()
 {
+	free(server);
 	if (con != -1)
 	{
 		if (RecvThread != 0)
 		{
-			vaSend("Quit :%s is going down", nick);
+			//vaSend("Quit :%s is going down", nick);
 			pthread_cancel(RecvThread);
 			pthread_join(RecvThread, NULL);
 		}
@@ -269,6 +270,24 @@ void IRC::Send(const char *message)
 	sprintf(realMessage, "%s\r\n", message);
 	send(con, realMessage, lenRealMessage, 0);
 	free(realMessage);
+}
+
+void IRC::Quit()
+{
+	const char * quitMsg;
+	JSONObject &config = configRoot->asObjectRef();
+
+	if (config.exists("quitMessage") && config["quitMessage"]->getType() == JSON_TYPE_STRING)
+		quitMsg = config["quitMessage"]->asString();
+	else
+		quitMsg = "IRCBot :: https://github.com/DX-MON/IRCBot";
+	vaSend("QUIT :%s", quitMsg);
+	shutdown(con, SHUT_WR);
+}
+
+void IRC::SetServer(const char *Server)
+{
+	server = strdup(Server);
 }
 
 const char *IRC::GetNick() const
@@ -556,4 +575,6 @@ void IRCMessage::queueCommandProcessing(IRC *Connection)
 		con->printf("%s\n", Line);
 	else if (Command != CMD_PING)
 		commandQueue.push(new Request(Command, Parameters, Prefix));
+	if (Command == RPL_WELCOME)
+		Connection->SetServer(Prefix);
 }
