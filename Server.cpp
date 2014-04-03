@@ -24,11 +24,11 @@
 
 ThreadedQueue<Request *> commandQueue;
 Console *con;
-bool shutdown = false;
+bool quitSignaled = false;
 
 void QuitFn(int)
 {
-	shutdown = true;
+	quitSignaled = true;
 	commandQueue.signalItems();
 }
 
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 
 	// Additional startup code here
 
-	while (shutdown == false)
+	while (quitSignaled == false)
 	{
 		try
 		{
@@ -69,10 +69,10 @@ int main(int argc, char **argv)
 		{
 			IRCCon->Connect();
 
-			while (shutdown == false)
+			while (quitSignaled == false)
 			{
 				commandQueue.waitItems();
-				if (shutdown == true)
+				if (quitSignaled == true)
 					break;
 				while (commandQueue.size() != 0)
 				{
