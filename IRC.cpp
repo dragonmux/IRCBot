@@ -82,18 +82,18 @@ IRC::~IRC()
 	free(server);
 	if (con != -1)
 	{
+		pthread_mutex_lock(&IRCMutex);
 		if (RecvThread != 0)
 		{
 			//vaSend("Quit :%s is going down", nick);
 			pthread_cancel(RecvThread);
 			pthread_join(RecvThread, NULL);
 		}
-#if 0
-		// this fails when the bot is shut down via "kill -TERM [botPID]"
+		pthread_mutex_unlock(&IRCMutex);
+		pthread_mutex_destroy(&IRCMutex);
+
 		shutdown(con, SHUT_RDWR);
 		close(con);
-#endif
-		pthread_mutex_destroy(&IRCMutex);
 	}
 	delete configRoot;
 }
