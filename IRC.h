@@ -102,7 +102,6 @@ private:
 	pthread_t RecvThread;
 	rSON::JSONAtom *configRoot;
 	const char *nick;
-	char *server;
 
 	static void *ThreadedRecv(void *p_This);
 	char *safeRealloc(char *m, int s);
