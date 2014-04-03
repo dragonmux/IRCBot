@@ -274,7 +274,7 @@ void IRC::Send(const char *message)
 
 void IRC::Quit()
 {
-	const char * quitMsg;
+	const char *quitMsg;
 	JSONObject &config = configRoot->asObjectRef();
 
 	if (config.exists("quitMessage") && config["quitMessage"]->getType() == JSON_TYPE_STRING)
