@@ -37,7 +37,7 @@ typedef enum _IRCCommand
 	CMD_MODE,
 	CMD_TOPIC,
 	CMD_NAMES,
-	CMD_USERQUIT,
+	CMD_QUIT,
 	// RPL_* - replys
 	RPL_WELCOME,
 	RPL_YOURHOST,

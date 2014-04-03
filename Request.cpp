@@ -145,6 +145,9 @@ void Request::process(IRC *Connection)
 			con->printf("People on channel %s: %s\n", Parameters[Parameters.size() - 2], Parameters[Parameters.size() - 1]);
 			parseNames();
 			break;
+		case CMD_QUIT:
+			con->printf("%s has quit IRC: %s\n", Prefix, Parameters[0]);
+			break;
 		case RPL_INFO:
 		case RPL_BOUNCE:
 		{
