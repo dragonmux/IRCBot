@@ -84,7 +84,6 @@ IRC::~IRC()
 		pthread_mutex_lock(&IRCMutex);
 		if (RecvThread != 0)
 		{
-			//vaSend("Quit :%s is going down", nick);
 			pthread_cancel(RecvThread);
 			pthread_join(RecvThread, NULL);
 		}
