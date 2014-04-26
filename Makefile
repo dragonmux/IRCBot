@@ -22,6 +22,11 @@ CFLAGS = $(OPTIM_FLAGS) -Wall -Wextra $(CFLAGS_EXTRA) -c -o $*.o
 LIBS = $(shell pkg-config --libs $(PKG_CONFIG_PKGS)) -pthread -lstdc++
 LFLAGS = $(O) $(LIBS) -o $(EXE)
 
+PREFIX ?= /usr
+LIBDIR ?= $(PREFIX)/lib
+
+export PREFIX LIBDIR
+
 O = String.o Console.o Error.o Request.o IRC.o Server.o
 EXE = IRCBot
 
@@ -29,9 +34,12 @@ default: all
 
 all: $(EXE)
 
-$(EXE): $(O)
+$(EXE): rSON $(O)
 	$(call run-cmd,ccld,$(LFLAGS))
 	$(call debug-strip,$(EXE))
+
+rSON:
+	$(call run-cmd,rSONbuilder)
 
 .cpp.o:
 	$(call run-cmd,cxx,$(CFLAGS) $<)
@@ -39,4 +47,4 @@ $(EXE): $(O)
 clean:
 	$(call run-cmd,rm,$(O))
 
-.PHONY: default all clean .cpp.o
+.PHONY: default all clean .cpp.o rSON

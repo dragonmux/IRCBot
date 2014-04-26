@@ -57,6 +57,8 @@ quiet_cmd_install_dir = " INSTALL $(2)"
 cmd_install_dir = $(INSTALL_DIR) $(2)
 quiet_cmd_install_file = " INSTALL $(2)"
 cmd_install_file = $(INSTALL_FILE) $(2)
+quiet_cmd_rSONbuilder = " => rSON"
+cmd_rSONbuilder = ./rSONbuilder.sh
 
 define run-cmd
 	@echo $($(quiet)cmd_$(1))
@@ -90,3 +92,5 @@ CC = $(GCC) $(GCC_FLAGS)
 CXX = $(GXX) $(GCC_FLAGS)
 LN = ln -sfT
 STRIP = strip -s
+
+export GCC CXX
