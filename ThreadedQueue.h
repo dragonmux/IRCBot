@@ -66,10 +66,19 @@ public:
 		pthread_mutex_unlock(&queueMutex);
 	}
 
-	void push(T item)
+	void push(const T &item)
 	{
+		pthread_mutex_lock(&queueMutex);
 		std::queue<T>::push(item);
+		pthread_mutex_unlock(&queueMutex);
 		signalItems();
+	}
+
+	void pop()
+	{
+		pthread_mutex_lock(&queueMutex);
+		std::queue<T>::pop();
+		pthread_mutex_unlock(&queueMutex);
 	}
 };
 
